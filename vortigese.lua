@@ -10,7 +10,13 @@ vortigeseWords = {"ahglah", "ahhhr", "alla", "allu", "baah", "beh", "bim", "buu"
 nut.chat.register("vorttrue", {
 	color = Color(114, 175, 237),
 	onChatAdd = function(speaker, text)
-		chat.AddText(Color(114, 175, 237), text)
+		local sr = nut.config.get("chatRange", 280)
+		local se = ents.FindInSphere(speaker:GetPos(), sr)
+		for _,v in ipairs(se) do
+			if v:Team() == FACTION_VORT then
+				chat.AddText(Color(114, 175, 237), text)
+			end
+		end
 	end,
 	onCanHear = function(speaker, listener)
 		if listener:Team() == FACTION_VORT then
@@ -31,8 +37,13 @@ nut.chat.register("vortfalse", {
 		end
 
 		local text = table.concat(vort, " ")
-
-		chat.AddText(Color(114, 175, 237), text)
+		local sr = nut.config.get("chatRange", 280)
+		local se = ents.FindInSphere(speaker:GetPos(), sr)
+		for k,v in ipairs(se) do
+			if v:Team != FACTION_VORT then
+				chat.AddText(Color(114, 175, 237), text)
+			end
+		end
 	end,
 	onCanHear = function(speaker, listener)
 		if listener:Team() != FACTION_VORT then
@@ -45,15 +56,15 @@ nut.command.add("vort", {
 	syntax = "<string text>",
 	onRun = function(client, arguments)
 		local text = table.concat(arguments, " ")
+		local vn = client:Name()
 
 		for _,v in ipairs(player.GetAll()) do
 			local vt = v:Team()
-			local vn = v:Name()
 			if text:find("%S") then
 				if vt == FACTION_VORT then
-					nut.chat.send(v, "vorttrue", ""..vn.." :"..text)
+					nut.chat.send(v, "vorttrue", vn.." :"..text)
 				else
-					nut.chat.send(v, "vortfalse", ""..vn.." :"..text)
+					nut.chat.send(v, "vortfalse", vn.." :"..text)
 				end
 			end
 		end
