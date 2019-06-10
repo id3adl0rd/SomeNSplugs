@@ -16,7 +16,7 @@ if (SERVER) then
 
 	net.Receive("nsRequestSound", function(len, client)
 		local path = net.ReadString()
-		if (client:IsAdmin(client)) then
+		if (client:IsAdmin()) then
 			net.Start("nsBroadcastSound")
 			net.WriteString(path)
 			net.Broadcast()
