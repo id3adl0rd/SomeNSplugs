@@ -3,7 +3,7 @@ PLUGIN.author = "D3ADL0RD"
 PLUGIN.desc = ":shrug:"
 
 if (SERVER) then
-	local combineNPCClass = {
+	local cn = {
 		"npc_metropolice",
 		"npc_strider",
 		"npc_combine_s",
@@ -20,25 +20,13 @@ if (SERVER) then
 		"npc_cscanner",
 		"npc_turret_ground"
 	}
-	local rebelNPCClass = {
+	local rn = {
 		"npc_citizen",
 		"npc_alyx",
 		"npc_vortigaunt",
 		"npc_barney"
 	}
 	
-	function PLUGIN:needmoregold(client)
-		local isc = client:IsCombine()
-		local t = client:Team()
-		if isc then
-			return true
-		elseif t == FACTION_ADMIN then
-			return true
-		end
-
-		return false
-	end
-
 	function PLUGIN:PlayerLoadedChar(client)
 		self:UpdateRelations(client)
 	end
@@ -49,12 +37,30 @@ if (SERVER) then
 		end
 	end
 	
+	function PLUGIN:needmoregold(client)
+		if client:IsPlayer() then
+			if client:IsCombine() or client:Team() == FACTION_ADMIN then
+				return true
+			end
+		end
+	end
+
 	function PLUGIN:UpdateRelations(client)
-		for k, v in pairs( ents.FindByClass( "npc_*" ) ) do
-			if (table.HasValue(combineNPCClass, v:GetClass():lower())) then
-				v:AddEntityRelationship(client, (client:needmoregold() and D_LI) or D_HT)
-			elseif (table.HasValue(rebelNPCClass, v:GetClass():lower())) then
-				v:AddEntityRelationship(client, (client:needmoregold() and D_HT) or D_LI)
+		local npc = ents.FindByClass("npc_*")
+		for _,v in pairs(npc) do
+			local gc = v:GetClass()
+			if (table.HasValue(cn, gc:lower())) then
+				if client:needmoregold() then
+					v:AddEntityRelationship(client, D_LI, 99)
+				else
+					v:AddEntityRelationship(client, D_HT, 99)
+				end
+			elseif (table.HasValue(rn, gc:lower())) then
+				if client:needmoregold() then
+					v:AddEntityRelationship(client, D_HT, 99)
+				else
+					v:AddEntityRelationship(client, D_LI, 99)
+				end
 			end
 		end
 	end
