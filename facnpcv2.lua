@@ -49,16 +49,16 @@ if (SERVER) then
 		local npc = ents.FindByClass("npc_*")
 		for _,v in pairs(npc) do
 			local gc = v:GetClass()
-			if (table.HasValue(cn, gc:lower())) then
-				if client:needmoregold() then
+			if self:needmoregold() then
+				if (table.HasValue(cn, gc:lower())) then
 					v:AddEntityRelationship(client, D_LI, 99)
-				else
+				elseif (table.HasValue(rn, gc:lower())) then
 					v:AddEntityRelationship(client, D_HT, 99)
 				end
-			elseif (table.HasValue(rn, gc:lower())) then
-				if client:needmoregold() then
+			else
+				if (table.HasValue(cn, gc:lower())) then
 					v:AddEntityRelationship(client, D_HT, 99)
-				else
+				elseif (table.HasValue(rn, gc:lower())) then
 					v:AddEntityRelationship(client, D_LI, 99)
 				end
 			end
