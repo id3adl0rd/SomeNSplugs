@@ -28,7 +28,15 @@ if (SERVER) then
 	}
 	
 	function PLUGIN:needmoregold(client)
-		return client:IsCombine() or client:Team() == FACTION_ADMIN
+		local isc = client:IsCombine()
+		local t = client:Team()
+		if isc then
+			return true
+		elseif t == FACTION_ADMIN then
+			return true
+		end
+
+		return false
 	end
 
 	function PLUGIN:PlayerLoadedChar(client)
@@ -44,9 +52,9 @@ if (SERVER) then
 	function PLUGIN:UpdateRelations(client)
 		for k, v in pairs( ents.FindByClass( "npc_*" ) ) do
 			if (table.HasValue(combineNPCClass, v:GetClass():lower())) then
-				v:AddEntityRelationship(client, client:needmoregold() and D_LI or D_HT)
+				v:AddEntityRelationship(client, (client:needmoregold() and D_LI) or D_HT)
 			elseif (table.HasValue(rebelNPCClass, v:GetClass():lower())) then
-				v:AddEntityRelationship(client, client:needmoregold() and D_HT or D_LI)
+				v:AddEntityRelationship(client, (client:needmoregold() and D_HT) or D_LI)
 			end
 		end
 	end
