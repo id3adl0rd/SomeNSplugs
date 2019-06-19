@@ -42,7 +42,9 @@ nut.chat.register("vortfalse", {
 		local se = ents.FindInSphere(speaker:GetPos(), sr)
 		for _,v in ipairs(se) do
 			if v == listener then continue end
-			return true
+			if listener:Team() == FACTION_VORT then
+				return true
+			end
 		end
 	end
 })
@@ -67,7 +69,9 @@ nut.chat.register("vorthowlfalse", {
 		local se = ents.FindInSphere(speaker:GetPos(), sr)
 		for _,v in ipairs(se) do
 			if v == listener then continue end
-			return true
+			if listener:Team() != FACTION_VORT then
+				return true
+			end
 		end
 	end
 })
@@ -97,9 +101,9 @@ nut.command.add("vort", {
 				for _,v in ipairs(player.GetAll()) do
 					local vt = v:Team()
 					if vt == FACTION_VORT then
-						nut.chat.send(v, "vorttrue", vn.." :"..text)
+						nut.chat.send(v, "vorttrue", vn.." : "..text)
 					else
-						nut.chat.send(v, "vortfalse", vn.." :"..text)
+						nut.chat.send(v, "vortfalse", vn.." : "..text)
 					end
 				end
 			end
@@ -117,9 +121,9 @@ nut.command.add("vorthowl", {
 				for _,v in ipairs(player.GetAll()) do
 					local vt = v:Team()
 					if vt == FACTION_VORT then
-						nut.chat.send(v, "vorthowltrue", vn.." :"..text)
+						nut.chat.send(v, "vorthowltrue", vn.." : "..text)
 					else
-						nut.chat.send(v, "vorthowlfalse", vn.." :"..text)
+						nut.chat.send(v, "vorthowlfalse", vn.." : "..text)
 					end
 				end
 			end
