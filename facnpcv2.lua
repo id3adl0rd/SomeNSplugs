@@ -38,27 +38,17 @@ if (SERVER) then
 	end
 	
 	function PLUGIN:needmoregold(client)
-		if client:isCombine() or client:Team() == FACTION_ADMIN then
-			return true
-		end
+ 		return client:isCombine() or client:Team() == FACTION_ADMIN then
 	end
 
 	function PLUGIN:UpdateRelations(client)
 		local npc = ents.FindByClass("npc_*")
 		for _,v in pairs(npc) do
-			local gc = v:GetClass()
-			if self:needmoregold(client) then
-				if (table.HasValue(cn, gc:lower())) then
-					v:AddEntityRelationship(client, D_LI, 99)
-				elseif (table.HasValue(rn, gc:lower())) then
-					v:AddEntityRelationship(client, D_HT, 99)
-				end
-			else
-				if (table.HasValue(cn, gc:lower())) then
-					v:AddEntityRelationship(client, D_HT, 99)
-				elseif (table.HasValue(rn, gc:lower())) then
-					v:AddEntityRelationship(client, D_LI, 99)
-				end
+			local gc = v:GetClass():lower()
+			if (table.HasValue(cn, gc)) then
+				v:AddEntityRelationship(client, (self:needmoregold(client) and D_LI) or D_HT, 99)
+			elseif (table.HasValue(rn, gc)) then
+				v:AddEntityRelationship(client, (self:needmoregold(client) and D_HT) or D_LI, 99)
 			end
 		end
 	end
