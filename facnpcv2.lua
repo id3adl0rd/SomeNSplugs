@@ -38,10 +38,8 @@ if (SERVER) then
 	end
 	
 	function PLUGIN:needmoregold(client)
-		if client:IsPlayer() then
-			if client:IsCombine() or client:Team() == FACTION_ADMIN then
-				return true
-			end
+		if client:IsCombine() or client:Team() == FACTION_ADMIN then
+			return true
 		end
 	end
 
@@ -49,7 +47,7 @@ if (SERVER) then
 		local npc = ents.FindByClass("npc_*")
 		for _,v in pairs(npc) do
 			local gc = v:GetClass()
-			if self:needmoregold() then
+			if self:needmoregold(client) then
 				if (table.HasValue(cn, gc:lower())) then
 					v:AddEntityRelationship(client, D_LI, 99)
 				elseif (table.HasValue(rn, gc:lower())) then
