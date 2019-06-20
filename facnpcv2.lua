@@ -38,7 +38,7 @@ if (SERVER) then
 	end
 	
 	function PLUGIN:needmoregold(client)
- 		return client:isCombine() or client:Team() == FACTION_ADMIN then
+ 		return client:isCombine() or client:Team() == FACTION_ADMIN
 	end
 
 	function PLUGIN:UpdateRelations(client)
