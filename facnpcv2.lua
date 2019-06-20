@@ -27,6 +27,11 @@ if (SERVER) then
 		"npc_barney"
 	}
 	
+	local neutral = {
+		"FACTION_CITIZEN",
+		"FACTION_VORTSLAVE"
+	}
+	
 	function PLUGIN:PlayerLoadedChar(client)
 		self:UpdateRelations(client)
 	end
@@ -49,6 +54,11 @@ if (SERVER) then
 				v:AddEntityRelationship(client, (self:needmoregold(client) and D_LI) or D_HT, 99)
 			elseif (table.HasValue(rn, gc)) then
 				v:AddEntityRelationship(client, (self:needmoregold(client) and D_HT) or D_LI, 99)
+			end
+			if (table.HasValue(cn, gc) or table.HasValue(rn, gc)) then
+				for _2,v2 in ipairs(neutral) do
+					v2:AddEntityRelationship(client, D_LI 99)
+				end
 			end
 		end
 	end
